@@ -1,0 +1,139 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:task_electro_pi/core/themes/app_colors.dart';
+import 'package:task_electro_pi/core/utils/app_strings.dart';
+import 'package:task_electro_pi/feature/movies/data/model/movie_model.dart';
+import 'package:task_electro_pi/feature/movies/ui/widgets/score_ring.dart';
+
+class MovieDetailsScreen extends StatelessWidget {
+  const MovieDetailsScreen({super.key, required this.movie});
+
+  final MovieModel movie;
+
+  String get backdropImageUrl => '${AppStrings.imageBaseUrl}${movie.backdropPath}';
+
+  String get posterImageUrl => '${AppStrings.imageBaseUrl}${movie.posterPath}';
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            expandedHeight: 240,
+            pinned: true,
+            backgroundColor: AppColors.tmdbNavy,
+            foregroundColor: Colors.white,
+            flexibleSpace: FlexibleSpaceBar(
+              background: buildBackdrop(),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  buildHeaderRow(theme),
+                  const SizedBox(height: 20),
+                  Text(
+                    'Overview',
+                    style: theme.textTheme.titleMedium
+                        ?.copyWith(fontWeight: FontWeight.w800),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    movie.overview.isEmpty
+                        ? 'No overview available.'
+                        : movie.overview,
+                    style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildBackdrop() {
+    if (movie.backdropPath.isEmpty) {
+      return Container(color: AppColors.tmdbNavy);
+    }
+    return CachedNetworkImage(
+      imageUrl: backdropImageUrl,
+      fit: BoxFit.cover,
+      placeholder: (context, url) => Container(color: AppColors.tmdbNavy),
+      errorWidget: (context, url, error) =>
+          Container(color: AppColors.tmdbNavy),
+    );
+  }
+
+  Widget buildHeaderRow(ThemeData theme) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Hero(
+          tag: 'movie-${movie.id}',
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: CachedNetworkImage(
+              imageUrl: posterImageUrl,
+              width: 120,
+              height: 180,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => Container(
+                width: 120,
+                height: 180,
+                color: theme.colorScheme.surfaceContainerHighest,
+              ),
+              errorWidget: (context, url, error) => Container(
+                width: 120,
+                height: 180,
+                color: theme.colorScheme.surfaceContainerHighest,
+                alignment: Alignment.center,
+                child: const Icon(Icons.movie_outlined, size: 40),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                movie.title,
+                style: theme.textTheme.titleLarge
+                    ?.copyWith(fontWeight: FontWeight.w800),
+              ),
+              const SizedBox(height: 8),
+              if (movie.releaseDate.isNotEmpty)
+                Text(
+                  movie.releaseDate,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.textTheme.bodyMedium?.color
+                        ?.withValues(alpha: 0.6),
+                  ),
+                ),
+              const SizedBox(height: 14),
+              Row(
+                children: <Widget>[
+                  ScoreRing(voteAverage: movie.voteAverage, diameter: 46),
+                  const SizedBox(width: 10),
+                  Text(
+                    'User Score',
+                    style: theme.textTheme.bodyMedium
+                        ?.copyWith(fontWeight: FontWeight.w700),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}

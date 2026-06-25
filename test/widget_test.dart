@@ -1,30 +1,41 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:task_electro_pi/main.dart';
+import 'package:task_electro_pi/feature/movies/data/model/movie_model.dart';
+import 'package:task_electro_pi/feature/movies/data/model/movies_result_model.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  test('MovieModel.fromJson parses TMDB fields', () {
+    final movie = MovieModel.fromJson(<String, dynamic>{
+      'id': 550,
+      'title': 'Fight Club',
+      'poster_path': '/poster.jpg',
+      'backdrop_path': '/backdrop.jpg',
+      'vote_average': 8.4,
+      'vote_count': 1000,
+      'release_date': '1999-10-15',
+      'overview': 'An insomniac office worker...',
+      'original_language': 'en',
+      'popularity': 61.4,
+    });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    expect(movie.id, 550);
+    expect(movie.title, 'Fight Club');
+    expect(movie.posterPath, '/poster.jpg');
+    expect(movie.voteAverage, 8.4);
+  });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+  test('MoviesResultModel.fromJson parses the results list', () {
+    final result = MoviesResultModel.fromJson(<String, dynamic>{
+      'page': 1,
+      'results': <Map<String, dynamic>>[
+        <String, dynamic>{'id': 1, 'title': 'First'},
+        <String, dynamic>{'id': 2, 'title': 'Second'},
+      ],
+      'total_pages': 10,
+      'total_results': 200,
+    });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(result.movies.length, 2);
+    expect(result.movies.first.title, 'First');
+    expect(result.page, 1);
   });
 }
