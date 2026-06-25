@@ -13,6 +13,27 @@ class AppStrings {
   static const String comingSoonEndpoint = 'movie/upcoming';
   static const String searchMovieEndpoint = 'search/movie';
 
+  static const String requestTokenEndpoint = 'authentication/token/new';
+  static const String validateLoginEndpoint =
+      'authentication/token/validate_with_login';
+  static const String createSessionEndpoint = 'authentication/session/new';
+  static const String deleteSessionEndpoint = 'authentication/session';
+  static const String accountEndpoint = 'account';
+
+  static String favoriteMoviesEndpoint(int accountId) =>
+      'account/$accountId/favorite/movies';
+
+  static String favoriteEndpoint(int accountId) => 'account/$accountId/favorite';
+
+  static const String sessionIdKey = 'session_id';
+  static const String accountIdKey = 'account_id';
+  static const String usernameKey = 'username';
+  static const String savedUsernameKey = 'saved_username';
+  static const String savedPasswordKey = 'saved_password';
+
+  static const String defaultUsername = 'mohamedmohamed2023';
+  static const String defaultPassword = r'*x0c7My)1z+$';
+
   static const String cacheTrendingKey = 'cache_trending_movies';
   static const String cachePopularKey = 'cache_popular_movies';
   static const String cacheNowPlayingKey = 'cache_now_playing_movies';

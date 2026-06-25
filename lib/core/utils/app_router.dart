@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_electro_pi/core/utils/service_locator.dart';
+import 'package:task_electro_pi/feature/favorites/ui/favorites_screen.dart';
 import 'package:task_electro_pi/feature/movies/data/model/movie_model.dart';
 import 'package:task_electro_pi/feature/movies/ui/home_screen.dart';
 import 'package:task_electro_pi/feature/movies/ui/movie_details_screen.dart';
 import 'package:task_electro_pi/feature/search/ui/search_screen.dart';
 import 'package:task_electro_pi/feature/search/viewmodel/search_cubit.dart';
 import 'package:task_electro_pi/feature/settings/ui/settings_screen.dart';
+import 'package:task_electro_pi/feature/signin/ui/login_screen.dart';
+import 'package:task_electro_pi/feature/signin/viewmodel/login_cubit.dart';
 
 final GoRouter routerConfig = GoRouter(
   debugLogDiagnostics: kDebugMode,
@@ -44,6 +47,25 @@ final GoRouter routerConfig = GoRouter(
       pageBuilder: (context, state) => buildFadeSlidePage(
         state: state,
         child: const SettingsScreen(),
+      ),
+    ),
+    GoRoute(
+      path: '/login',
+      name: 'login',
+      pageBuilder: (context, state) => buildFadeSlidePage(
+        state: state,
+        child: BlocProvider<LoginCubit>(
+          create: (providerContext) => getIt<LoginCubit>(),
+          child: const LoginScreen(),
+        ),
+      ),
+    ),
+    GoRoute(
+      path: '/favorites',
+      name: 'favorites',
+      pageBuilder: (context, state) => buildFadeSlidePage(
+        state: state,
+        child: const FavoritesScreen(),
       ),
     ),
   ],

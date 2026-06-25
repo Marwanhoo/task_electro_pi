@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:task_electro_pi/core/utils/app_strings.dart';
+import 'package:task_electro_pi/feature/favorites/ui/favorite_heart_button.dart';
 import 'package:task_electro_pi/feature/movies/data/model/movie_model.dart';
 import 'package:task_electro_pi/feature/movies/ui/widgets/score_ring.dart';
 
@@ -22,6 +23,9 @@ class MovieDetailsScreen extends StatelessWidget {
           SliverAppBar(
             expandedHeight: 240,
             pinned: true,
+            actions: <Widget>[
+              FavoriteHeartButton(movieId: movie.id),
+            ],
             flexibleSpace: FlexibleSpaceBar(
               background: buildBackdrop(theme),
             ),

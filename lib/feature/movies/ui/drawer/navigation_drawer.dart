@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_electro_pi/core/constants/app_assets.dart';
 import 'package:task_electro_pi/core/themes/app_colors.dart';
+import 'package:task_electro_pi/feature/logout/ui/logout_dialog.dart';
+import 'package:task_electro_pi/feature/signin/viewmodel/session_cubit.dart';
+import 'package:task_electro_pi/feature/signin/viewmodel/session_state.dart';
 import 'package:task_electro_pi/feature/theme/cubit/theme_cubit.dart';
 import 'package:task_electro_pi/feature/theme/cubit/theme_state.dart';
 
@@ -41,6 +44,47 @@ class AppNavigationDrawer extends StatelessWidget {
               onTap: () {
                 Navigator.of(context).pop();
                 context.push('/settings');
+              },
+            ),
+            BlocBuilder<SessionCubit, SessionState>(
+              builder: (sessionContext, sessionState) {
+                if (sessionState.isAuthenticated) {
+                  return Column(
+                    children: <Widget>[
+                      const Divider(),
+                      ListTile(
+                        leading: const Icon(Icons.favorite_outline),
+                        title: const Text('Favorites'),
+                        onTap: () {
+                          Navigator.of(sessionContext).pop();
+                          sessionContext.push('/favorites');
+                        },
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.person_outline),
+                        title: Text(sessionState.username ?? 'Account'),
+                        subtitle: const Text('Signed in'),
+                      ),
+                      ListTile(
+                        leading: const Icon(Icons.logout),
+                        title: const Text('Log out'),
+                        onTap: () {
+                          Navigator.of(sessionContext).pop();
+                          showLogoutDialog(sessionContext);
+                        },
+                      ),
+                    ],
+                  );
+                }
+
+                return ListTile(
+                  leading: const Icon(Icons.login),
+                  title: const Text('Login'),
+                  onTap: () {
+                    Navigator.of(sessionContext).pop();
+                    sessionContext.push('/login');
+                  },
+                );
               },
             ),
             const Divider(),

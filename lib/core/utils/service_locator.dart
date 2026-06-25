@@ -5,11 +5,20 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:task_electro_pi/core/utils/api_services.dart';
 import 'package:task_electro_pi/core/utils/app_cache.dart';
 import 'package:task_electro_pi/core/utils/app_strings.dart';
+import 'package:task_electro_pi/core/utils/session_interceptor.dart';
+import 'package:task_electro_pi/feature/favorites/data/repository/favorites_repository.dart';
+import 'package:task_electro_pi/feature/favorites/data/repository/favorites_repository_impl.dart';
+import 'package:task_electro_pi/feature/favorites/viewmodel/favorites_cubit.dart';
+import 'package:task_electro_pi/feature/logout/viewmodel/logout_cubit.dart';
 import 'package:task_electro_pi/feature/movies/data/repository/movie_repository.dart';
 import 'package:task_electro_pi/feature/movies/data/repository/movie_repository_impl.dart';
 import 'package:task_electro_pi/feature/movies/viewmodel/carousel/movie_carousel_cubit.dart';
 import 'package:task_electro_pi/feature/movies/viewmodel/tabbed/movie_tabbed_cubit.dart';
 import 'package:task_electro_pi/feature/search/viewmodel/search_cubit.dart';
+import 'package:task_electro_pi/feature/signin/data/repository/auth_repository.dart';
+import 'package:task_electro_pi/feature/signin/data/repository/auth_repository_impl.dart';
+import 'package:task_electro_pi/feature/signin/viewmodel/login_cubit.dart';
+import 'package:task_electro_pi/feature/signin/viewmodel/session_cubit.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -29,6 +38,8 @@ Future<void> setupServiceLocator() async {
         },
       ),
     );
+
+    dio.interceptors.add(SessionInterceptor());
 
     if (kDebugMode) {
       dio.interceptors.add(
@@ -53,6 +64,38 @@ Future<void> setupServiceLocator() async {
 
   getIt.registerLazySingleton<MovieRepository>(
     () => MovieRepositoryImpl(apiServices: getIt<ApiServices>()),
+  );
+
+  getIt.registerLazySingleton<AuthRepository>(
+    () => AuthRepositoryImpl(apiServices: getIt<ApiServices>()),
+  );
+
+  getIt.registerLazySingleton<FavoritesRepository>(
+    () => FavoritesRepositoryImpl(apiServices: getIt<ApiServices>()),
+  );
+
+  getIt.registerLazySingleton<SessionCubit>(() => SessionCubit());
+
+  getIt.registerLazySingleton<FavoritesCubit>(
+    () => FavoritesCubit(
+      repository: getIt<FavoritesRepository>(),
+      sessionCubit: getIt<SessionCubit>(),
+    ),
+  );
+
+  getIt.registerFactory<LoginCubit>(
+    () => LoginCubit(
+      repository: getIt<AuthRepository>(),
+      sessionCubit: getIt<SessionCubit>(),
+    ),
+  );
+
+  getIt.registerFactory<LogoutCubit>(
+    () => LogoutCubit(
+      authRepository: getIt<AuthRepository>(),
+      sessionCubit: getIt<SessionCubit>(),
+      favoritesCubit: getIt<FavoritesCubit>(),
+    ),
   );
 
   getIt.registerFactory<MovieCarouselCubit>(
