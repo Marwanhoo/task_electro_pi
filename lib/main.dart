@@ -15,6 +15,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = MyBlocObserver();
   await setupServiceLocator();
+  appRouter = createAppRouter(getIt<SessionCubit>());
   runApp(const MovieApp());
 }
 
@@ -53,7 +54,7 @@ class MovieApp extends StatelessWidget {
               curve: Curves.easeInOut,
               duration: const Duration(milliseconds: 400),
             ),
-            routerConfig: routerConfig,
+            routerConfig: appRouter,
           );
         },
       ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:task_electro_pi/feature/signin/viewmodel/login_cubit.dart';
 import 'package:task_electro_pi/feature/signin/viewmodel/login_state.dart';
 
@@ -15,7 +14,6 @@ class LoginScreen extends StatelessWidget {
           ScaffoldMessenger.of(listenerContext).showSnackBar(
             SnackBar(content: Text('Welcome, ${state.session.username}')),
           );
-          listenerContext.go('/');
         } else if (state is LoginFailureState) {
           ScaffoldMessenger.of(listenerContext).showSnackBar(
             SnackBar(content: Text(state.error)),

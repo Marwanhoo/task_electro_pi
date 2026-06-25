@@ -86,7 +86,10 @@ class SearchScreenState extends State<SearchScreen> {
       ),
       itemCount: state.results.length,
       itemBuilder: (gridContext, index) =>
-          MoviePosterCard(movie: state.results[index]),
+          MoviePosterCard(
+            movie: state.results[index],
+            heroScope: 'search-$index',
+          ),
     );
   }
 }

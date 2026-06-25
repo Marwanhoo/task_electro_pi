@@ -6,4 +6,10 @@ class MovieTabConstants {
     'Now Playing',
     'Upcoming',
   ];
+
+  static const List<String> heroScopes = <String>[
+    'popular',
+    'now-playing',
+    'upcoming',
+  ];
 }

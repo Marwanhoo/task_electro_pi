@@ -4,6 +4,7 @@ import 'package:task_electro_pi/core/utils/service_locator.dart';
 import 'package:task_electro_pi/feature/movies/ui/drawer/navigation_drawer.dart';
 import 'package:task_electro_pi/feature/movies/ui/widgets/hero_banner.dart';
 import 'package:task_electro_pi/feature/movies/ui/widgets/horizontal_movie_list.dart';
+import 'package:task_electro_pi/feature/movies/ui/movie_tab_constants.dart';
 import 'package:task_electro_pi/feature/movies/ui/widgets/popular_tabs.dart';
 import 'package:task_electro_pi/feature/movies/ui/widgets/section_header.dart';
 import 'package:task_electro_pi/feature/movies/ui/widgets/tmdb_app_bar.dart';
@@ -78,7 +79,10 @@ class TrendingSection extends StatelessWidget {
   Widget buildTrendingContent(BuildContext context, MovieCarouselState state) {
     switch (state.status) {
       case MovieCarouselStatus.success:
-        return HorizontalMovieList(movies: state.movies);
+        return HorizontalMovieList(
+          movies: state.movies,
+          heroScope: 'trending',
+        );
       case MovieCarouselStatus.failure:
         return MessagePlaceholder(
           message: state.errorMessage ?? 'Could not load trending movies',
@@ -117,7 +121,10 @@ class PopularSection extends StatelessWidget {
   Widget buildPopularContent(BuildContext context, MovieTabbedState state) {
     switch (state.status) {
       case MovieTabbedStatus.success:
-        return HorizontalMovieList(movies: state.movies);
+        return HorizontalMovieList(
+          movies: state.movies,
+          heroScope: MovieTabConstants.heroScopes[state.currentTabIndex],
+        );
       case MovieTabbedStatus.failure:
         return MessagePlaceholder(
           message: state.errorMessage ?? 'Could not load movies',

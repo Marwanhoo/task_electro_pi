@@ -6,9 +6,14 @@ import 'package:task_electro_pi/feature/movies/data/model/movie_model.dart';
 import 'package:task_electro_pi/feature/movies/ui/widgets/score_ring.dart';
 
 class MovieDetailsScreen extends StatelessWidget {
-  const MovieDetailsScreen({super.key, required this.movie});
+  const MovieDetailsScreen({
+    super.key,
+    required this.movie,
+    this.heroTag,
+  });
 
   final MovieModel movie;
+  final String? heroTag;
 
   String get backdropImageUrl => '${AppStrings.imageBaseUrl}${movie.backdropPath}';
 
@@ -73,33 +78,35 @@ class MovieDetailsScreen extends StatelessWidget {
   }
 
   Widget buildHeaderRow(ThemeData theme) {
+    final poster = ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: CachedNetworkImage(
+        imageUrl: posterImageUrl,
+        width: 120,
+        height: 180,
+        fit: BoxFit.cover,
+        placeholder: (context, url) => Container(
+          width: 120,
+          height: 180,
+          color: theme.colorScheme.surfaceContainerHighest,
+        ),
+        errorWidget: (context, url, error) => Container(
+          width: 120,
+          height: 180,
+          color: theme.colorScheme.surfaceContainerHighest,
+          alignment: Alignment.center,
+          child: const Icon(Icons.movie_outlined, size: 40),
+        ),
+      ),
+    );
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Hero(
-          tag: 'movie-${movie.id}',
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: CachedNetworkImage(
-              imageUrl: posterImageUrl,
-              width: 120,
-              height: 180,
-              fit: BoxFit.cover,
-              placeholder: (context, url) => Container(
-                width: 120,
-                height: 180,
-                color: theme.colorScheme.surfaceContainerHighest,
-              ),
-              errorWidget: (context, url, error) => Container(
-                width: 120,
-                height: 180,
-                color: theme.colorScheme.surfaceContainerHighest,
-                alignment: Alignment.center,
-                child: const Icon(Icons.movie_outlined, size: 40),
-              ),
-            ),
-          ),
-        ),
+        if (heroTag != null)
+          Hero(tag: heroTag!, child: poster)
+        else
+          poster,
         const SizedBox(width: 16),
         Expanded(
           child: Column(

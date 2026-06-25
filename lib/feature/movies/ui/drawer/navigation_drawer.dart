@@ -19,20 +19,66 @@ class AppNavigationDrawer extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Image.asset(
-                AppAssets.tmdbLogo,
-                height: 26,
-                errorBuilder: (context, error, stackTrace) => Text(
-                  'TMDB',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w800,
+            BlocBuilder<SessionCubit, SessionState>(
+              builder: (sessionContext, sessionState) {
+                if (sessionState.isAuthenticated) {
+                  final username = sessionState.username ?? 'Account';
+                  return UserAccountsDrawerHeader(
+                    decoration: const BoxDecoration(color: AppColors.tmdbBlue),
+                    accountName: Text(
+                      username,
+                      style: const TextStyle(
+                        color: AppColors.onBrand,
+                        fontWeight: FontWeight.w700,
                       ),
-                ),
-              ),
+                    ),
+                    accountEmail: const Text(
+                      'TMDB Member',
+                      style: TextStyle(color: AppColors.onBrand),
+                    ),
+                    currentAccountPicture: CircleAvatar(
+                      backgroundColor: AppColors.onBrand,
+                      child: Text(
+                        username.isNotEmpty
+                            ? username[0].toUpperCase()
+                            : '?',
+                        style: const TextStyle(
+                          color: AppColors.tmdbBlue,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                    onDetailsPressed: () => Navigator.of(sessionContext).pop(),
+                  );
+                }
+
+                return UserAccountsDrawerHeader(
+                  decoration: const BoxDecoration(color: AppColors.tmdbBlue),
+                  accountName: const Text(
+                    'Guest',
+                    style: TextStyle(
+                      color: AppColors.onBrand,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  accountEmail: const Text(
+                    'Sign in to save favorites',
+                    style: TextStyle(color: AppColors.onBrand),
+                  ),
+                  currentAccountPicture: const CircleAvatar(
+                    backgroundColor: AppColors.onBrand,
+                    child: Icon(
+                      Icons.person_outline,
+                      color: AppColors.tmdbBlue,
+                    ),
+                  ),
+                  onDetailsPressed: () {
+                    Navigator.of(sessionContext).pop();
+                    sessionContext.push('/login');
+                  },
+                );
+              },
             ),
-            const Divider(),
             ListTile(
               leading: const Icon(Icons.home_outlined),
               title: const Text('Home'),
@@ -48,42 +94,29 @@ class AppNavigationDrawer extends StatelessWidget {
             ),
             BlocBuilder<SessionCubit, SessionState>(
               builder: (sessionContext, sessionState) {
-                if (sessionState.isAuthenticated) {
-                  return Column(
-                    children: <Widget>[
-                      const Divider(),
-                      ListTile(
-                        leading: const Icon(Icons.favorite_outline),
-                        title: const Text('Favorites'),
-                        onTap: () {
-                          Navigator.of(sessionContext).pop();
-                          sessionContext.push('/favorites');
-                        },
-                      ),
-                      ListTile(
-                        leading: const Icon(Icons.person_outline),
-                        title: Text(sessionState.username ?? 'Account'),
-                        subtitle: const Text('Signed in'),
-                      ),
-                      ListTile(
-                        leading: const Icon(Icons.logout),
-                        title: const Text('Log out'),
-                        onTap: () {
-                          Navigator.of(sessionContext).pop();
-                          showLogoutDialog(sessionContext);
-                        },
-                      ),
-                    ],
-                  );
+                if (!sessionState.isAuthenticated) {
+                  return const SizedBox.shrink();
                 }
 
-                return ListTile(
-                  leading: const Icon(Icons.login),
-                  title: const Text('Login'),
-                  onTap: () {
-                    Navigator.of(sessionContext).pop();
-                    sessionContext.push('/login');
-                  },
+                return Column(
+                  children: <Widget>[
+                    ListTile(
+                      leading: const Icon(Icons.favorite_outline),
+                      title: const Text('Favorites'),
+                      onTap: () {
+                        Navigator.of(sessionContext).pop();
+                        sessionContext.push('/favorites');
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.logout),
+                      title: const Text('Log out'),
+                      onTap: () {
+                        Navigator.of(sessionContext).pop();
+                        showLogoutDialog(sessionContext);
+                      },
+                    ),
+                  ],
                 );
               },
             ),
