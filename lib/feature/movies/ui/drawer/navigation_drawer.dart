@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_electro_pi/core/constants/app_assets.dart';
 import 'package:task_electro_pi/core/themes/app_colors.dart';
+import 'package:task_electro_pi/feature/theme/cubit/theme_cubit.dart';
+import 'package:task_electro_pi/feature/theme/cubit/theme_state.dart';
 
 class AppNavigationDrawer extends StatelessWidget {
   const AppNavigationDrawer({super.key});
@@ -40,6 +43,19 @@ class AppNavigationDrawer extends StatelessWidget {
               onTap: () {
                 Navigator.of(context).pop();
                 context.push('/settings');
+              },
+            ),
+            const Divider(),
+            BlocBuilder<ThemeCubit, ThemeState>(
+              builder: (builderContext, themeState) {
+                final themeCubit = builderContext.read<ThemeCubit>();
+                return SwitchListTile(
+                  secondary: const Icon(Icons.brightness_6_outlined),
+                  title: const Text('Dark theme'),
+                  subtitle: const Text('Enable dark theme'),
+                  value: themeCubit.isDarkMode,
+                  onChanged: (isEnabled) => themeCubit.toggleThemeMode(),
+                );
               },
             ),
             const Spacer(),
