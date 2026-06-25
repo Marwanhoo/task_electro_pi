@@ -48,6 +48,24 @@ class MovieRepositoryImpl implements MovieRepository {
     );
   }
 
+  @override
+  Future<Either<Failure, List<MovieModel>>> searchMovies(String query) async {
+    try {
+      final responseData = await apiServices.get(
+        endPoint: AppStrings.searchMovieEndpoint,
+        queryParameters: <String, dynamic>{'query': query},
+      );
+      final rawResults =
+          responseData['results'] as List<dynamic>? ?? <dynamic>[];
+      final movies = MoviesResultModel.moviesFromRawList(rawResults);
+      return Right(movies);
+    } on DioException catch (dioException) {
+      return Left(ServerFailure.fromDioException(dioException));
+    } catch (error) {
+      return Left(ServerFailure(error.toString()));
+    }
+  }
+
   Future<Either<Failure, List<MovieModel>>> fetchMovies({
     required String endPoint,
     required String cacheKey,

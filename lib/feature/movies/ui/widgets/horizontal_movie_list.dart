@@ -17,7 +17,8 @@ class HorizontalMovieList extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         itemCount: movies.length,
         separatorBuilder: (context, index) => const SizedBox(width: 14),
-        itemBuilder: (context, index) => MoviePosterCard(movie: movies[index]),
+        itemBuilder: (context, index) =>
+            MoviePosterCard(movie: movies[index], posterWidth: 140),
       ),
     );
   }

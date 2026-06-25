@@ -9,6 +9,7 @@ import 'package:task_electro_pi/feature/movies/data/repository/movie_repository.
 import 'package:task_electro_pi/feature/movies/data/repository/movie_repository_impl.dart';
 import 'package:task_electro_pi/feature/movies/viewmodel/carousel/movie_carousel_cubit.dart';
 import 'package:task_electro_pi/feature/movies/viewmodel/tabbed/movie_tabbed_cubit.dart';
+import 'package:task_electro_pi/feature/search/viewmodel/search_cubit.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -60,5 +61,9 @@ Future<void> setupServiceLocator() async {
 
   getIt.registerFactory<MovieTabbedCubit>(
     () => MovieTabbedCubit(movieRepository: getIt<MovieRepository>()),
+  );
+
+  getIt.registerFactory<SearchCubit>(
+    () => SearchCubit(movieRepository: getIt<MovieRepository>()),
   );
 }

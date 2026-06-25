@@ -10,4 +10,6 @@ abstract class MovieRepository {
   Future<Either<Failure, List<MovieModel>>> getNowPlayingMovies();
 
   Future<Either<Failure, List<MovieModel>>> getComingSoonMovies();
+
+  Future<Either<Failure, List<MovieModel>>> searchMovies(String query);
 }

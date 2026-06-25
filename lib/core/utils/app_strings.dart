@@ -11,6 +11,7 @@ class AppStrings {
   static const String popularEndpoint = 'movie/popular';
   static const String nowPlayingEndpoint = 'movie/now_playing';
   static const String comingSoonEndpoint = 'movie/upcoming';
+  static const String searchMovieEndpoint = 'search/movie';
 
   static const String cacheTrendingKey = 'cache_trending_movies';
   static const String cachePopularKey = 'cache_popular_movies';

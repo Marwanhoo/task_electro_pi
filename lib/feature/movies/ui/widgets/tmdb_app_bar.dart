@@ -25,12 +25,6 @@ class TmdbAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       ),
-      actions: <Widget>[
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.search),
-        ),
-      ],
     );
   }
 }

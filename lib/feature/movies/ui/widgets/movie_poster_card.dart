@@ -6,10 +6,13 @@ import 'package:task_electro_pi/feature/movies/data/model/movie_model.dart';
 import 'package:task_electro_pi/feature/movies/ui/widgets/score_ring.dart';
 
 class MoviePosterCard extends StatelessWidget {
-  const MoviePosterCard({super.key, required this.movie, this.posterWidth = 140});
+  const MoviePosterCard({super.key, required this.movie, this.posterWidth});
 
   final MovieModel movie;
-  final double posterWidth;
+
+  /// Fixed card width for horizontal lists. When null the card fills the
+  /// width given by its parent (used inside the search results grid).
+  final double? posterWidth;
 
   String get posterImageUrl => '${AppStrings.imageBaseUrl}${movie.posterPath}';
 
@@ -20,24 +23,24 @@ class MoviePosterCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return GestureDetector(
+    final card = GestureDetector(
       onTap: () => openMovieDetails(context),
-      child: SizedBox(
-        width: posterWidth,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Stack(
-              clipBehavior: Clip.none,
-              children: <Widget>[
-                Hero(
-                  tag: 'movie-${movie.id}',
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Stack(
+            clipBehavior: Clip.none,
+            children: <Widget>[
+              Hero(
+                tag: 'movie-${movie.id}',
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: AspectRatio(
+                    aspectRatio: 2 / 3,
                     child: CachedNetworkImage(
                       imageUrl: posterImageUrl,
-                      width: posterWidth,
-                      height: posterWidth * 1.5,
+                      width: double.infinity,
                       fit: BoxFit.cover,
                       placeholder: (context, url) => Container(
                         color: theme.colorScheme.surfaceContainerHighest,
@@ -50,33 +53,40 @@ class MoviePosterCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                Positioned(
-                  left: 8,
-                  bottom: -18,
-                  child: ScoreRing(voteAverage: movie.voteAverage),
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-            Text(
-              movie.title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w700,
               ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              formatReleaseDate(movie.releaseDate),
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.6),
+              Positioned(
+                left: 8,
+                bottom: -18,
+                child: ScoreRing(voteAverage: movie.voteAverage),
               ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          Text(
+            movie.title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w700,
             ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            formatReleaseDate(movie.releaseDate),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.textTheme.bodySmall?.color?.withValues(alpha: 0.6),
+            ),
+          ),
+        ],
       ),
     );
+
+    if (posterWidth == null) {
+      return card;
+    }
+    return SizedBox(width: posterWidth, child: card);
   }
 
   String formatReleaseDate(String releaseDate) {

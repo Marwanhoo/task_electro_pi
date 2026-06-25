@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:task_electro_pi/core/themes/app_colors.dart';
 import 'package:task_electro_pi/core/utils/app_strings.dart';
 import 'package:task_electro_pi/feature/movies/data/model/movie_model.dart';
@@ -66,7 +67,7 @@ class HeroBanner extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 18),
-                buildSearchField(),
+                buildSearchField(context),
               ],
             ),
           ),
@@ -75,8 +76,10 @@ class HeroBanner extends StatelessWidget {
     );
   }
 
-  Widget buildSearchField() {
-    return Container(
+  Widget buildSearchField(BuildContext context) {
+    return GestureDetector(
+      onTap: () => context.push('/search'),
+      child: Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(28),
@@ -104,6 +107,7 @@ class HeroBanner extends StatelessWidget {
             ),
           ),
         ],
+      ),
       ),
     );
   }
