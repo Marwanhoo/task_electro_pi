@@ -15,6 +15,7 @@ class HeroBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return SizedBox(
       height: 260,
       width: double.infinity,
@@ -49,20 +50,18 @@ class HeroBanner extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                const Text(
+                Text(
                   'Welcome.',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 34,
+                  style: textTheme.headlineMedium?.copyWith(
+                    color: AppColors.onBrand,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
                 const SizedBox(height: 6),
-                const Text(
+                Text(
                   'Millions of movies to discover. Explore now.',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
+                  style: textTheme.titleMedium?.copyWith(
+                    color: AppColors.onBrand,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -80,34 +79,37 @@ class HeroBanner extends StatelessWidget {
     return GestureDetector(
       onTap: () => context.push('/search'),
       child: Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(28),
-      ),
-      child: Row(
-        children: <Widget>[
-          const SizedBox(width: 18),
-          const Expanded(
-            child: Text(
-              'Search for a movie...',
-              style: TextStyle(color: Colors.black54, fontSize: 14),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: <Color>[AppColors.scoreGreen, AppColors.tmdbBlue],
+        decoration: BoxDecoration(
+          color: AppColors.searchFieldFill,
+          borderRadius: BorderRadius.circular(28),
+        ),
+        child: Row(
+          children: <Widget>[
+            const SizedBox(width: 18),
+            const Expanded(
+              child: Text(
+                'Search for a movie...',
+                style: TextStyle(color: AppColors.searchFieldHint, fontSize: 14),
               ),
-              borderRadius: BorderRadius.all(Radius.circular(28)),
             ),
-            child: const Text(
-              'Search',
-              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: <Color>[AppColors.scoreGreen, AppColors.tmdbBlue],
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(28)),
+              ),
+              child: const Text(
+                'Search',
+                style: TextStyle(
+                  color: AppColors.onBrand,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
       ),
     );
   }

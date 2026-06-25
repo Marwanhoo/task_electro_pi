@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:task_electro_pi/core/themes/app_colors.dart';
 import 'package:task_electro_pi/core/utils/app_strings.dart';
 import 'package:task_electro_pi/feature/movies/data/model/movie_model.dart';
 import 'package:task_electro_pi/feature/movies/ui/widgets/score_ring.dart';
@@ -23,10 +22,8 @@ class MovieDetailsScreen extends StatelessWidget {
           SliverAppBar(
             expandedHeight: 240,
             pinned: true,
-            backgroundColor: AppColors.tmdbNavy,
-            foregroundColor: Colors.white,
             flexibleSpace: FlexibleSpaceBar(
-              background: buildBackdrop(),
+              background: buildBackdrop(theme),
             ),
           ),
           SliverToBoxAdapter(
@@ -58,16 +55,16 @@ class MovieDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget buildBackdrop() {
+  Widget buildBackdrop(ThemeData theme) {
+    final placeholderColor = theme.colorScheme.surfaceContainerHighest;
     if (movie.backdropPath.isEmpty) {
-      return Container(color: AppColors.tmdbNavy);
+      return Container(color: placeholderColor);
     }
     return CachedNetworkImage(
       imageUrl: backdropImageUrl,
       fit: BoxFit.cover,
-      placeholder: (context, url) => Container(color: AppColors.tmdbNavy),
-      errorWidget: (context, url, error) =>
-          Container(color: AppColors.tmdbNavy),
+      placeholder: (context, url) => Container(color: placeholderColor),
+      errorWidget: (context, url, error) => Container(color: placeholderColor),
     );
   }
 

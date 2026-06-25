@@ -56,7 +56,7 @@ class ScoreRing extends StatelessWidget {
             text: TextSpan(
               text: '$scorePercentage',
               style: TextStyle(
-                color: Colors.white,
+                color: AppColors.onBrand,
                 fontSize: diameter * 0.30,
                 fontWeight: FontWeight.w700,
               ),
@@ -64,7 +64,7 @@ class ScoreRing extends StatelessWidget {
                 TextSpan(
                   text: '%',
                   style: TextStyle(
-                    color: Colors.white,
+                    color: AppColors.onBrand,
                     fontSize: diameter * 0.18,
                     fontWeight: FontWeight.w600,
                   ),

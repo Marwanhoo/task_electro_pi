@@ -21,13 +21,11 @@ class AppNavigationDrawer extends StatelessWidget {
               child: Image.asset(
                 AppAssets.tmdbLogo,
                 height: 26,
-                errorBuilder: (context, error, stackTrace) => const Text(
+                errorBuilder: (context, error, stackTrace) => Text(
                   'TMDB',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 22,
-                  ),
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w800,
+                      ),
                 ),
               ),
             ),

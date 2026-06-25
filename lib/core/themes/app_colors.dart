@@ -20,4 +20,10 @@ class AppColors {
   static const Color scoreTrackGreen = Color(0xFF204529);
   static const Color scoreTrackYellow = Color(0xFF423D0F);
   static const Color scoreTrackRed = Color(0xFF571435);
+
+  // Tokens for branded overlays painted on top of movie images (hero banner,
+  // score badge). These intentionally stay fixed in both light and dark modes.
+  static const Color onBrand = Color(0xFFFFFFFF);
+  static const Color searchFieldFill = Color(0xFFFFFFFF);
+  static const Color searchFieldHint = Color(0x8A000000);
 }
