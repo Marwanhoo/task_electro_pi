@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_electro_pi/core/constants/app_assets.dart';
 import 'package:task_electro_pi/core/themes/app_colors.dart';
@@ -136,10 +137,12 @@ class AppNavigationDrawer extends StatelessWidget {
             const Spacer(),
             Padding(
               padding: const EdgeInsets.all(16),
-              child: Image.asset(
-                AppAssets.tmdbLogo,
+              child: SvgPicture.network(
+                AppAssets.tmdbFullLogoUrl,
                 height: 18,
-                color: AppColors.tmdbBlue,
+                fit: BoxFit.contain,
+                semanticsLabel: 'TMDB logo',
+                placeholderBuilder: (context) => const SizedBox(height: 18),
                 errorBuilder: (context, error, stackTrace) =>
                     const SizedBox.shrink(),
               ),
