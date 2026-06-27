@@ -13,6 +13,7 @@ import 'package:task_electro_pi/feature/logout/viewmodel/logout_cubit.dart';
 import 'package:task_electro_pi/feature/movies/data/repository/movie_repository.dart';
 import 'package:task_electro_pi/feature/movies/data/repository/movie_repository_impl.dart';
 import 'package:task_electro_pi/feature/movies/viewmodel/carousel/movie_carousel_cubit.dart';
+import 'package:task_electro_pi/feature/movies/viewmodel/details/movie_details_cubit.dart';
 import 'package:task_electro_pi/feature/movies/viewmodel/tabbed/movie_tabbed_cubit.dart';
 import 'package:task_electro_pi/feature/search/viewmodel/search_cubit.dart';
 import 'package:task_electro_pi/feature/signin/data/repository/auth_repository.dart';
@@ -108,5 +109,9 @@ Future<void> setupServiceLocator() async {
 
   getIt.registerFactory<SearchCubit>(
     () => SearchCubit(movieRepository: getIt<MovieRepository>()),
+  );
+
+  getIt.registerFactory<MovieDetailsCubit>(
+    () => MovieDetailsCubit(movieRepository: getIt<MovieRepository>()),
   );
 }

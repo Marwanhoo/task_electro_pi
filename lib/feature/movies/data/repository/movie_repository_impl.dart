@@ -7,8 +7,10 @@ import 'package:task_electro_pi/core/errors/server_failure.dart';
 import 'package:task_electro_pi/core/utils/api_services.dart';
 import 'package:task_electro_pi/core/utils/app_cache.dart';
 import 'package:task_electro_pi/core/utils/app_strings.dart';
+import 'package:task_electro_pi/feature/movies/data/model/cast_member_model.dart';
 import 'package:task_electro_pi/feature/movies/data/model/movie_model.dart';
 import 'package:task_electro_pi/feature/movies/data/model/movies_result_model.dart';
+import 'package:task_electro_pi/feature/movies/data/model/video_model.dart';
 import 'package:task_electro_pi/feature/movies/data/repository/movie_repository.dart';
 
 class MovieRepositoryImpl implements MovieRepository {
@@ -59,6 +61,47 @@ class MovieRepositoryImpl implements MovieRepository {
           responseData['results'] as List<dynamic>? ?? <dynamic>[];
       final movies = MoviesResultModel.moviesFromRawList(rawResults);
       return Right(movies);
+    } on DioException catch (dioException) {
+      return Left(ServerFailure.fromDioException(dioException));
+    } catch (error) {
+      return Left(ServerFailure(error.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<CastMemberModel>>> getMovieCredits(
+    int movieId,
+  ) async {
+    try {
+      final responseData = await apiServices.get(
+        endPoint: AppStrings.movieCreditsEndpoint(movieId),
+      );
+      final rawCast = responseData['cast'] as List<dynamic>? ?? <dynamic>[];
+      final cast = rawCast
+          .map(
+            (item) => CastMemberModel.fromJson(item as Map<String, dynamic>),
+          )
+          .toList();
+      return Right(cast);
+    } on DioException catch (dioException) {
+      return Left(ServerFailure.fromDioException(dioException));
+    } catch (error) {
+      return Left(ServerFailure(error.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<VideoModel>>> getMovieVideos(int movieId) async {
+    try {
+      final responseData = await apiServices.get(
+        endPoint: AppStrings.movieVideosEndpoint(movieId),
+      );
+      final rawResults =
+          responseData['results'] as List<dynamic>? ?? <dynamic>[];
+      final videos = rawResults
+          .map((item) => VideoModel.fromJson(item as Map<String, dynamic>))
+          .toList();
+      return Right(videos);
     } on DioException catch (dioException) {
       return Left(ServerFailure.fromDioException(dioException));
     } catch (error) {

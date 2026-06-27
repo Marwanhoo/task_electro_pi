@@ -8,6 +8,7 @@ import 'package:task_electro_pi/feature/favorites/ui/favorites_screen.dart';
 import 'package:task_electro_pi/feature/movies/ui/home_screen.dart';
 import 'package:task_electro_pi/feature/movies/ui/movie_details_route_args.dart';
 import 'package:task_electro_pi/feature/movies/ui/movie_details_screen.dart';
+import 'package:task_electro_pi/feature/movies/viewmodel/details/movie_details_cubit.dart';
 import 'package:task_electro_pi/feature/search/ui/search_screen.dart';
 import 'package:task_electro_pi/feature/search/viewmodel/search_cubit.dart';
 import 'package:task_electro_pi/feature/settings/ui/settings_screen.dart';
@@ -55,9 +56,13 @@ GoRouter createAppRouter(SessionCubit sessionCubit) {
           final routeArgs = MovieDetailsRouteArgs.fromExtra(state.extra);
           return buildFadeSlidePage(
             state: state,
-            child: MovieDetailsScreen(
-              movie: routeArgs.movie,
-              heroTag: routeArgs.heroTag,
+            child: BlocProvider<MovieDetailsCubit>(
+              create: (_) =>
+                  getIt<MovieDetailsCubit>()..loadDetails(routeArgs.movie.id),
+              child: MovieDetailsScreen(
+                movie: routeArgs.movie,
+                heroTag: routeArgs.heroTag,
+              ),
             ),
           );
         },

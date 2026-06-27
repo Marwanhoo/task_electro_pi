@@ -13,6 +13,10 @@ class AppStrings {
   static const String comingSoonEndpoint = 'movie/upcoming';
   static const String searchMovieEndpoint = 'search/movie';
 
+  static String movieCreditsEndpoint(int movieId) => 'movie/$movieId/credits';
+  static String movieVideosEndpoint(int movieId) => 'movie/$movieId/videos';
+  static const String youtubeWatchBaseUrl = 'https://www.youtube.com/watch?v=';
+
   static const String requestTokenEndpoint = 'authentication/token/new';
   static const String validateLoginEndpoint =
       'authentication/token/validate_with_login';
