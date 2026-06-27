@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:task_electro_pi/feature/signin/viewmodel/login_cubit.dart';
 import 'package:task_electro_pi/feature/signin/viewmodel/login_state.dart';
 
@@ -11,7 +12,11 @@ class LoginScreen extends StatelessWidget {
     return BlocConsumer<LoginCubit, LoginStates>(
       listener: (listenerContext, state) {
         if (state is LoginSuccessState) {
-          ScaffoldMessenger.of(listenerContext).showSnackBar(
+          final messenger = ScaffoldMessenger.of(listenerContext);
+          final redirect =
+              GoRouter.of(listenerContext).state.uri.queryParameters['redirect'];
+          GoRouter.of(listenerContext).go(redirect ?? '/');
+          messenger.showSnackBar(
             SnackBar(content: Text('Welcome, ${state.session.username}')),
           );
         } else if (state is LoginFailureState) {

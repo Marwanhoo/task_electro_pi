@@ -6,6 +6,7 @@ import 'package:task_electro_pi/core/utils/url_launcher_helper.dart';
 import 'package:task_electro_pi/feature/favorites/ui/favorite_heart_button.dart';
 import 'package:task_electro_pi/feature/movies/data/model/movie_model.dart';
 import 'package:task_electro_pi/feature/movies/ui/widgets/cast_member_tile.dart';
+import 'package:task_electro_pi/feature/movies/ui/widgets/horizontal_movie_list.dart';
 import 'package:task_electro_pi/feature/movies/ui/widgets/score_ring.dart';
 import 'package:task_electro_pi/feature/movies/viewmodel/details/movie_details_cubit.dart';
 import 'package:task_electro_pi/feature/movies/viewmodel/details/movie_details_state.dart';
@@ -98,6 +99,18 @@ class MovieDetailsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   buildCastSection(theme),
+                  buildRelatedMoviesSection(
+                    theme: theme,
+                    title: 'Similar',
+                    moviesSelector: (state) => state.similarMovies,
+                    heroScope: 'details-similar-${movie.id}',
+                  ),
+                  buildRelatedMoviesSection(
+                    theme: theme,
+                    title: 'Recommendations',
+                    moviesSelector: (state) => state.recommendedMovies,
+                    heroScope: 'details-recs-${movie.id}',
+                  ),
                 ],
               ),
             ),
@@ -153,6 +166,63 @@ class MovieDetailsScreen extends StatelessWidget {
                 ),
               ),
           ],
+        );
+      },
+    );
+  }
+
+  Widget buildRelatedMoviesSection({
+    required ThemeData theme,
+    required String title,
+    required List<MovieModel> Function(MovieDetailsState state) moviesSelector,
+    required String heroScope,
+  }) {
+    return BlocBuilder<MovieDetailsCubit, MovieDetailsState>(
+      builder: (context, state) {
+        if (state.status == MovieDetailsStatus.loading) {
+          return Padding(
+            padding: const EdgeInsets.only(top: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  title,
+                  style: theme.textTheme.titleMedium
+                      ?.copyWith(fontWeight: FontWeight.w800),
+                ),
+                const SizedBox(height: 12),
+                const SizedBox(
+                  height: 290,
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+              ],
+            ),
+          );
+        }
+
+        final movies = moviesSelector(state);
+        if (movies.isEmpty) {
+          return const SizedBox.shrink();
+        }
+
+        return Padding(
+          padding: const EdgeInsets.only(top: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                title,
+                style: theme.textTheme.titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w800),
+              ),
+              const SizedBox(height: 12),
+              HorizontalMovieList(
+                movies: movies,
+                heroScope: heroScope,
+                listPadding: EdgeInsets.zero,
+              ),
+            ],
+          ),
         );
       },
     );

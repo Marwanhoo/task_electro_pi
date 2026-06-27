@@ -8,11 +8,13 @@ class HorizontalMovieList extends StatelessWidget {
     required this.movies,
     required this.heroScope,
     this.listHeight = 290,
+    this.listPadding = const EdgeInsets.symmetric(horizontal: 16),
   });
 
   final List<MovieModel> movies;
   final String heroScope;
   final double listHeight;
+  final EdgeInsetsGeometry listPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,7 @@ class HorizontalMovieList extends StatelessWidget {
       height: listHeight,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: listPadding,
         itemCount: movies.length,
         separatorBuilder: (context, index) => const SizedBox(width: 14),
         itemBuilder: (context, index) => MoviePosterCard(

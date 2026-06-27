@@ -18,4 +18,8 @@ abstract class MovieRepository {
   Future<Either<Failure, List<CastMemberModel>>> getMovieCredits(int movieId);
 
   Future<Either<Failure, List<VideoModel>>> getMovieVideos(int movieId);
+
+  Future<Either<Failure, List<MovieModel>>> getSimilarMovies(int movieId);
+
+  Future<Either<Failure, List<MovieModel>>> getRecommendedMovies(int movieId);
 }

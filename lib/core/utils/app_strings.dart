@@ -15,6 +15,9 @@ class AppStrings {
 
   static String movieCreditsEndpoint(int movieId) => 'movie/$movieId/credits';
   static String movieVideosEndpoint(int movieId) => 'movie/$movieId/videos';
+  static String movieSimilarEndpoint(int movieId) => 'movie/$movieId/similar';
+  static String movieRecommendationsEndpoint(int movieId) =>
+      'movie/$movieId/recommendations';
   static const String youtubeWatchBaseUrl = 'https://www.youtube.com/watch?v=';
 
   static const String requestTokenEndpoint = 'authentication/token/new';

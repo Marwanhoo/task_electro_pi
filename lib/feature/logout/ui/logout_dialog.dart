@@ -6,6 +6,7 @@ import 'package:task_electro_pi/feature/logout/viewmodel/logout_cubit.dart';
 import 'package:task_electro_pi/feature/logout/viewmodel/logout_state.dart';
 
 void showLogoutDialog(BuildContext context) {
+  final messenger = ScaffoldMessenger.of(context);
   showAdaptiveDialog(
     context: context,
     builder: (dialogContext) {
@@ -15,7 +16,7 @@ void showLogoutDialog(BuildContext context) {
           listener: (blocContext, state) {
             if (state is LogoutSuccessState) {
               Navigator.of(dialogContext).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
+              messenger.showSnackBar(
                 const SnackBar(content: Text('Logged out successfully')),
               );
             }
