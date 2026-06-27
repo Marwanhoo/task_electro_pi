@@ -28,6 +28,7 @@ A Flutter movie browser built on top of [The Movie Database (TMDB)](https://www.
 - [Packages used](#packages-used)
 - [iOS: Swift Package Manager (not CocoaPods)](#ios-swift-package-manager-not-cocoapods)
 - [Test the app (download APK)](#test-the-app-download-apk)
+- [Development environment](#development-environment)
 - [Getting started](#getting-started)
 
 ---
@@ -45,6 +46,12 @@ A Flutter movie browser built on top of [The Movie Database (TMDB)](https://www.
 | Login | Favorites | Search |
 | --- | --- | --- |
 | ![Login](screenshots/07_login.png) | ![Favorites](screenshots/08_favorites.png) | ![Search](screenshots/09_search.png) |
+
+**Movie details**
+
+| Overview & where to watch | Where to watch + cast | Cast, similar & recommendations |
+| --- | --- | --- |
+| ![Details overview](screenshots/10_details_overview.png) | ![Details where to watch](screenshots/11_details_where_to_watch.png) | ![Details cast & similar](screenshots/12_details_cast_similar.png) |
 
 ---
 
@@ -308,6 +315,10 @@ Implemented with Flutter's built-in `RefreshIndicator`:
 
 The [details screen](lib/feature/movies/ui/movie_details_screen.dart) shows a backdrop `SliverAppBar`, poster + title + user score header, a "Watch Trailer" button (opens YouTube externally), the overview, watch providers (with a "View on TMDB" link), cast, and similar/recommended rows. The base movie data (title, poster, overview, score) is passed via route args, so it renders instantly while the extra sections load.
 
+| Overview & where to watch | Where to watch + cast | Cast, similar & recommendations |
+| --- | --- | --- |
+| ![Details overview](screenshots/10_details_overview.png) | ![Details where to watch](screenshots/11_details_where_to_watch.png) | ![Details cast & similar](screenshots/12_details_cast_similar.png) |
+
 ---
 
 ## Packages used
@@ -356,16 +367,32 @@ Then run as usual with `flutter run`.
 
 ## Test the app (download APK)
 
-The easiest way to try the app on Android is to download the prebuilt APK from the GitHub Releases page:
+The easiest way to try the app on Android is to download the prebuilt APK:
 
-https://github.com/Marwanhoo/task_electro_pi/releases
+**Direct download (v1.0.0):** [app-release.apk](https://github.com/Marwanhoo/task_electro_pi/releases/download/1.0.0/app-release.apk)
 
-1. Open the latest release.
-2. Download the `.apk` asset.
-3. On your Android device, allow installation from unknown sources, then install the APK.
-4. Sign in with the demo TMDB credentials (pre-filled on the login screen).
+You can also browse all releases here: https://github.com/Marwanhoo/task_electro_pi/releases
 
-> The APK is published under Releases and is uploaded separately.
+1. Download `app-release.apk` from the direct link above (or pick a build from the Releases page).
+2. On your Android device, allow installation from unknown sources, then install the APK.
+3. Sign in with the demo TMDB credentials (pre-filled on the login screen).
+
+---
+
+## Development environment
+
+The app was built and tested with the following setup. Other recent versions should also work.
+
+| Tool | Version |
+| --- | --- |
+| Machine | MacBook Pro (M4 Pro, 2024), Apple Silicon (arm64) |
+| OS | macOS 26.5.1 |
+| Flutter | 3.44.1 (stable channel) |
+| Dart | 3.12.1 (bundled with Flutter; pubspec SDK constraint `^3.12.1`) |
+| Android SDK | 36.1.0 |
+| Xcode | 26.4 (iOS / macOS) |
+| Android Studio | Quail 1 \| 2026.1.1 Patch 2 (build AI-261.23567.138.2611.15646644) |
+| Android Studio plugins | Dart 506.1.0, Flutter (io.flutter) 93.0.0 |
 
 ---
 
