@@ -18,6 +18,10 @@ class AppStrings {
   static String movieSimilarEndpoint(int movieId) => 'movie/$movieId/similar';
   static String movieRecommendationsEndpoint(int movieId) =>
       'movie/$movieId/recommendations';
+  static String movieWatchProvidersEndpoint(int movieId) =>
+      'movie/$movieId/watch/providers';
+  static const String providerLogoBaseUrl = 'https://image.tmdb.org/t/p/w92';
+  static const String defaultWatchProvidersRegion = 'US';
   static const String youtubeWatchBaseUrl = 'https://www.youtube.com/watch?v=';
 
   static const String requestTokenEndpoint = 'authentication/token/new';

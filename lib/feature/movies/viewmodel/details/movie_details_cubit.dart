@@ -4,6 +4,7 @@ import 'package:task_electro_pi/core/errors/failure.dart';
 import 'package:task_electro_pi/feature/movies/data/model/cast_member_model.dart';
 import 'package:task_electro_pi/feature/movies/data/model/movie_model.dart';
 import 'package:task_electro_pi/feature/movies/data/model/video_model.dart';
+import 'package:task_electro_pi/feature/movies/data/model/watch_provider_model.dart';
 import 'package:task_electro_pi/feature/movies/data/repository/movie_repository.dart';
 import 'package:task_electro_pi/feature/movies/viewmodel/details/movie_details_state.dart';
 
@@ -23,12 +24,14 @@ class MovieDetailsCubit extends Cubit<MovieDetailsState> {
       clearTrailerKey: true,
       similarMovies: <MovieModel>[],
       recommendedMovies: <MovieModel>[],
+      watchProviders: MovieWatchProvidersModel.empty(),
     ));
 
     late Either<Failure, List<CastMemberModel>> creditsResult;
     late Either<Failure, List<VideoModel>> videosResult;
     late Either<Failure, List<MovieModel>> similarResult;
     late Either<Failure, List<MovieModel>> recommendationsResult;
+    late Either<Failure, MovieWatchProvidersModel> watchProvidersResult;
 
     await Future.wait([
       movieRepository.getMovieCredits(movieId).then((value) {
@@ -43,6 +46,9 @@ class MovieDetailsCubit extends Cubit<MovieDetailsState> {
       movieRepository.getRecommendedMovies(movieId).then((value) {
         recommendationsResult = value;
       }),
+      movieRepository.getMovieWatchProviders(movieId).then((value) {
+        watchProvidersResult = value;
+      }),
     ]);
 
     String? errorMessage;
@@ -50,6 +56,7 @@ class MovieDetailsCubit extends Cubit<MovieDetailsState> {
     VideoModel? trailer;
     List<MovieModel> similarMovies = <MovieModel>[];
     List<MovieModel> recommendedMovies = <MovieModel>[];
+    MovieWatchProvidersModel watchProviders = MovieWatchProvidersModel.empty();
 
     creditsResult.fold(
       (failure) {
@@ -87,11 +94,21 @@ class MovieDetailsCubit extends Cubit<MovieDetailsState> {
       },
     );
 
+    watchProvidersResult.fold(
+      (failure) {
+        errorMessage ??= failure.message;
+      },
+      (providers) {
+        watchProviders = providers;
+      },
+    );
+
     if (errorMessage != null &&
         cast.isEmpty &&
         trailer == null &&
         similarMovies.isEmpty &&
-        recommendedMovies.isEmpty) {
+        recommendedMovies.isEmpty &&
+        watchProviders.isEmpty) {
       emit(state.copyWith(
         status: MovieDetailsStatus.failure,
         errorMessage: errorMessage,
@@ -105,6 +122,7 @@ class MovieDetailsCubit extends Cubit<MovieDetailsState> {
       trailerKey: trailer?.key,
       similarMovies: similarMovies,
       recommendedMovies: recommendedMovies,
+      watchProviders: watchProviders,
       clearErrorMessage: true,
     ));
   }

@@ -11,6 +11,7 @@ import 'package:task_electro_pi/feature/movies/data/model/cast_member_model.dart
 import 'package:task_electro_pi/feature/movies/data/model/movie_model.dart';
 import 'package:task_electro_pi/feature/movies/data/model/movies_result_model.dart';
 import 'package:task_electro_pi/feature/movies/data/model/video_model.dart';
+import 'package:task_electro_pi/feature/movies/data/model/watch_provider_model.dart';
 import 'package:task_electro_pi/feature/movies/data/repository/movie_repository.dart';
 
 class MovieRepositoryImpl implements MovieRepository {
@@ -121,6 +122,25 @@ class MovieRepositoryImpl implements MovieRepository {
     return fetchMovieList(
       endPoint: AppStrings.movieRecommendationsEndpoint(movieId),
     );
+  }
+
+  @override
+  Future<Either<Failure, MovieWatchProvidersModel>> getMovieWatchProviders(
+    int movieId, {
+    String region = AppStrings.defaultWatchProvidersRegion,
+  }) async {
+    try {
+      final responseData = await apiServices.get(
+        endPoint: AppStrings.movieWatchProvidersEndpoint(movieId),
+      );
+      final results = responseData['results'] as Map<String, dynamic>?;
+      final regionData = results?[region] as Map<String, dynamic>?;
+      return Right(MovieWatchProvidersModel.fromRegionJson(regionData));
+    } on DioException catch (dioException) {
+      return Left(ServerFailure.fromDioException(dioException));
+    } catch (error) {
+      return Left(ServerFailure(error.toString()));
+    }
   }
 
   Future<Either<Failure, List<MovieModel>>> fetchMovieList({

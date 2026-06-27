@@ -5,9 +5,11 @@ import 'package:task_electro_pi/core/utils/app_strings.dart';
 import 'package:task_electro_pi/core/utils/url_launcher_helper.dart';
 import 'package:task_electro_pi/feature/favorites/ui/favorite_heart_button.dart';
 import 'package:task_electro_pi/feature/movies/data/model/movie_model.dart';
+import 'package:task_electro_pi/feature/movies/data/model/watch_provider_model.dart';
 import 'package:task_electro_pi/feature/movies/ui/widgets/cast_member_tile.dart';
 import 'package:task_electro_pi/feature/movies/ui/widgets/horizontal_movie_list.dart';
 import 'package:task_electro_pi/feature/movies/ui/widgets/score_ring.dart';
+import 'package:task_electro_pi/feature/movies/ui/widgets/watch_provider_tile.dart';
 import 'package:task_electro_pi/feature/movies/viewmodel/details/movie_details_cubit.dart';
 import 'package:task_electro_pi/feature/movies/viewmodel/details/movie_details_state.dart';
 
@@ -98,6 +100,8 @@ class MovieDetailsScreen extends StatelessWidget {
                     style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
                   ),
                   const SizedBox(height: 24),
+                  buildWatchProvidersSection(theme),
+                  const SizedBox(height: 24),
                   buildCastSection(theme),
                   buildRelatedMoviesSection(
                     theme: theme,
@@ -118,6 +122,123 @@ class MovieDetailsScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget buildWatchProvidersSection(ThemeData theme) {
+    return BlocBuilder<MovieDetailsCubit, MovieDetailsState>(
+      builder: (context, state) {
+        if (state.status == MovieDetailsStatus.loading) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Where to Watch',
+                style: theme.textTheme.titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w800),
+              ),
+              const SizedBox(height: 12),
+              const SizedBox(
+                height: 100,
+                child: Center(child: CircularProgressIndicator()),
+              ),
+            ],
+          );
+        }
+
+        if (state.watchProviders.isEmpty) {
+          return const SizedBox.shrink();
+        }
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              'Where to Watch',
+              style: theme.textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.w800),
+            ),
+            const SizedBox(height: 12),
+            if (state.watchProviders.flatrate.isNotEmpty)
+              buildProviderRow(
+                theme: theme,
+                label: 'Stream',
+                providers: state.watchProviders.flatrate,
+              ),
+            if (state.watchProviders.rent.isNotEmpty)
+              buildProviderRow(
+                theme: theme,
+                label: 'Rent',
+                providers: state.watchProviders.rent,
+              ),
+            if (state.watchProviders.buy.isNotEmpty)
+              buildProviderRow(
+                theme: theme,
+                label: 'Buy',
+                providers: state.watchProviders.buy,
+              ),
+            if (state.watchProviders.link != null &&
+                state.watchProviders.link!.isNotEmpty)
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton(
+                  onPressed: () => onViewOnTmdbPressed(
+                    context,
+                    state.watchProviders.link!,
+                  ),
+                  child: const Text('View on TMDB'),
+                ),
+              ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget buildProviderRow({
+    required ThemeData theme,
+    required String label,
+    required List<WatchProviderModel> providers,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            label,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: theme.textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+            ),
+          ),
+          const SizedBox(height: 8),
+          SizedBox(
+            height: 96,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: providers.length,
+              separatorBuilder: (context, index) => const SizedBox(width: 12),
+              itemBuilder: (context, index) {
+                return WatchProviderTile(provider: providers[index]);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> onViewOnTmdbPressed(BuildContext context, String url) async {
+    final launched = await openExternalUrl(url);
+    if (!context.mounted) {
+      return;
+    }
+
+    if (!launched) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Unable to open link.')),
+      );
+    }
   }
 
   Widget buildCastSection(ThemeData theme) {
